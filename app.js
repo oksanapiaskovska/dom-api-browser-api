@@ -47,6 +47,7 @@ document.addEventListener('click', function (event) {
       filterTags.splice(tagIngex, 1);
     }
     console.warn(filterTags);
+    if(filterTags.length > 0) {
     filterTags.map(tag => {
       postsFiltered.map(post => {
         if(post.tags.indexOf(tag) !== -1) {
@@ -56,8 +57,7 @@ document.addEventListener('click', function (event) {
     });
     const sortedTags = postsFiltered
     .sort((a, b) => {
-      const dateA = new Date(a.createdAt), 
-            dateB = new Date(b.createdAt);
+      const dateA = new Date(a.createdAt), dateB = new Date(b.createdAt);
       if (b.index > a.index) {
         return 1;
       } else if (b.index === a.index) {
@@ -69,7 +69,12 @@ document.addEventListener('click', function (event) {
     .filter(post => post.index !== 0);
     postsFiltered = sortedTags;
     renderPost(sortedTags);
+    } else {
+    	postsFiltered = deepClone(posts);
+    renderPost(postsFiltered);
+    }
   }
+
 
   if(el.classList.contains('close')) {
     const id = el.id;
@@ -84,9 +89,9 @@ document.addEventListener('click', function (event) {
 
 // scroll
 function getDistFromBottom () {
-  var scrollPosition = window.pageYOffset;
-  var windowSize     = window.innerHeight;
-  var bodyHeight     = document.body.offsetHeight;
+  const scrollPosition = window.pageYOffset;
+  const windowSize = window.innerHeight;
+  const bodyHeight = document.body.offsetHeight;
   return Math.max(bodyHeight - (scrollPosition + windowSize), 0);
 }
 
@@ -159,7 +164,8 @@ let postsFiltered = [];
 fetch(url)
   .then((resp) => resp.json())
   .then(function(data) {
-    posts = data.data.map((post, i) => ({...post, index: 0, id: i}));    postsFiltered = deepClone(posts);
+    posts = data.data.map((post, i) => ({...post, index: 0, id: i}));    
+    postsFiltered = deepClone(posts);
     // 0 - від меншого до більшого
     // 1 - від більшого до меншого
     const sort = localStorage.getItem(sorting);

@@ -23,7 +23,7 @@ p {
 .btn {
   position: fixed;
   bottom: 40px;
-  left: 10px;
+  right: 10px;
 }
 .tags-wrp span,
 .tag-search span {
